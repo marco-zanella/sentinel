@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel — Privacy Policy</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 720px;
+      margin: 48px auto;
+      padding: 0 24px;
+      color: #222;
+      line-height: 1.7;
+    }
+    h1 { font-size: 1.8rem; margin-bottom: 0.25em; }
+    h2 { font-size: 1.15rem; margin-top: 2em; }
+    p, li { font-size: 1rem; }
+    a { color: #3949AB; }
+    .meta { color: #666; font-size: 0.9rem; margin-bottom: 2em; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 2.5em 0; }
+  </style>
+</head>
+<body>
+
+<h1>Privacy Policy</h1>
+<p class="meta">Application: <strong>Sentinel</strong> &mdash; Last updated: 2025-05-30</p>
+
+<p>
+  Sentinel is an Android application that reads your device's GPS location at a
+  configurable interval and sends it to recipients you choose (via SMS or Telegram).
+  This policy explains exactly what data the app accesses, how it is used, and what
+  it does not do.
+</p>
+
+<h2>1. Data collected</h2>
+<p>Sentinel accesses the following data on your device:</p>
+<ul>
+  <li>
+    <strong>Precise GPS location</strong> — read periodically while the tracking
+    service is running, and on demand when you tap "Send Now".
+  </li>
+</ul>
+<p>
+  No other personal data is accessed or collected. Sentinel does not read your
+  contacts, messages, call logs, photos, or any other content stored on the device.
+</p>
+
+<h2>2. How location data is used</h2>
+<p>
+  Location data is used solely to compose and deliver a position message to the
+  recipients you configured in the app. The message contains your coordinates,
+  accuracy radius, and a Google Maps link.
+</p>
+<p>
+  <strong>The developer of Sentinel never receives, stores, or processes your
+  location.</strong> No server operated by the developer is involved at any point.
+</p>
+
+<h2>3. Data transmission</h2>
+<p>
+  Depending on which recipient types you configure, location data may be transmitted
+  via the following channels:
+</p>
+<ul>
+  <li>
+    <strong>SMS</strong> — sent directly from your device using the Android SMS
+    system. The message is delivered to the phone number you entered and is subject
+    to your mobile carrier's terms of service.
+  </li>
+  <li>
+    <strong>Telegram</strong> — sent to the Telegram chat, group, or channel you
+    configured, via the Telegram Bot API (<a href="https://core.telegram.org/bots/api">core.telegram.org</a>).
+    Telegram's own <a href="https://telegram.org/privacy">Privacy Policy</a> applies
+    to messages delivered through their service.
+  </li>
+</ul>
+<p>
+  You are responsible for ensuring that the recipients you configure have consented
+  to receiving your location.
+</p>
+
+<h2>4. Data storage</h2>
+<p>
+  Configuration (recipient list, settings) and a delivery history log are stored
+  locally on your device using the app's private storage. This data is not backed
+  up to any cloud service by the app itself (standard Android backup rules apply
+  depending on your device settings). No data is ever uploaded to a remote server
+  by Sentinel.
+</p>
+
+<h2>5. Background location</h2>
+<p>
+  To send your location while the screen is off or the app is in the background,
+  Sentinel requests the <em>"Allow all the time"</em> location permission and runs
+  as a foreground service (indicated by a persistent notification). This permission
+  is used exclusively for the delivery purpose described above.
+</p>
+
+<h2>6. Third-party services</h2>
+<p>
+  Sentinel itself does not integrate any analytics, advertising, or crash-reporting
+  SDK. The only external network communication is the Telegram Bot API call
+  described in section 3, and only when you have configured a Telegram recipient.
+</p>
+
+<h2>7. Data retention and deletion</h2>
+<p>
+  All data (configuration and delivery log) exists only on your device. Uninstalling
+  Sentinel removes all locally stored data. The developer holds no copy of any data
+  and cannot delete data on your behalf.
+</p>
+
+<h2>8. Children</h2>
+<p>
+  Sentinel is not directed at children under 13 and does not knowingly collect data
+  from them.
+</p>
+
+<h2>9. Changes to this policy</h2>
+<p>
+  If this policy is updated, the new version will be published at this URL with a
+  revised "Last updated" date. Continued use of the app after a change constitutes
+  acceptance of the updated policy.
+</p>
+
+<h2>10. Contact</h2>
+<p>
+  For any questions about this privacy policy, contact:<br>
+  Marco Zanella &mdash; <a href="mailto:mzanella@ittweb.net">mzanella@ittweb.net</a>
+</p>
+
+<hr>
+<p style="font-size:0.85rem; color:#888;">
+  Sentinel is free software licensed under the
+  <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General Public License v3.0</a>.
+  Source code: <a href="https://github.com/marco-zanella/sentinel">github.com/marco-zanella/sentinel</a>
+</p>
+
+</body>
+</html>
