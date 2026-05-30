@@ -1,30 +1,66 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:sentinel/main.dart';
+import 'package:sentinel/models/delivery_policy.dart';
+import 'package:sentinel/models/recipient_group.dart';
+import 'package:sentinel/recipients/sms_recipient.dart';
+import 'package:sentinel/recipients/telegram_recipient.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('RecipientGroup', () {
+    test('default policy is any', () {
+      final RecipientGroup group = RecipientGroup(name: 'test');
+      expect(group.policy, DeliveryPolicy.any);
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('policy round-trips through policyValue', () {
+      final RecipientGroup group = RecipientGroup(name: 'test');
+      group.policy = DeliveryPolicy.all;
+      expect(group.policy, DeliveryPolicy.all);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('typedRecipients casts correctly', () {
+      final SmsRecipient sms =
+          SmsRecipient(label: 'Alice', phoneNumber: '+1234567890');
+      final TelegramRecipient tg = TelegramRecipient(
+        label: 'Bot',
+        botToken: 'tok',
+        chatId: '42',
+      );
+      final RecipientGroup group =
+          RecipientGroup(name: 'test', recipients: [sms, tg]);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(group.typedRecipients.length, 2);
+      expect(group.typedRecipients[0].displayName, 'Alice');
+      expect(group.typedRecipients[1].displayName, 'Bot');
+    });
+  });
+
+  group('SmsRecipient', () {
+    test('displayName falls back to phoneNumber when label is empty', () {
+      final SmsRecipient r =
+          SmsRecipient(label: '', phoneNumber: '+1234567890');
+      expect(r.displayName, '+1234567890');
+    });
+
+    test('recipientType is sms', () {
+      expect(
+        SmsRecipient(label: 'x', phoneNumber: '0').recipientType,
+        'sms',
+      );
+    });
+  });
+
+  group('TelegramRecipient', () {
+    test('displayName falls back to chatId when label is empty', () {
+      final TelegramRecipient r =
+          TelegramRecipient(label: '', botToken: 'tok', chatId: '99');
+      expect(r.displayName, '99');
+    });
+
+    test('recipientType is telegram', () {
+      expect(
+        TelegramRecipient(label: 'x', botToken: 't', chatId: '1').recipientType,
+        'telegram',
+      );
+    });
   });
 }
