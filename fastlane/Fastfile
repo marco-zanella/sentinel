@@ -1,0 +1,9 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build and sign release AAB"
+  lane :build do
+    sh "echo $KEYSTORE_BASE64 | base64 --decode > #{Dir.pwd}/../../release.keystore"
+    sh "cd #{Dir.pwd}/../.. && flutter build appbundle --release"
+  end
+end
