@@ -1,9 +1,10 @@
 default_platform(:android)
 
 platform :android do
-  desc "Build and sign release AAB"
+  desc "Build and sign release AAB and APK"
   lane :build do
     project_root = File.expand_path('..', __dir__)
     sh "cd '#{project_root}' && flutter build appbundle --release"
+    sh "cd '#{project_root}' && flutter build apk --release"
   end
 end
