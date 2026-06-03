@@ -38,6 +38,19 @@ android {
         versionName = flutter.versionName
     }
 
+    flavorDimensions += "distribution"
+
+    productFlavors {
+        // Play Store build: no SMS permission
+        create("play") {
+            dimension = "distribution"
+        }
+        // Full build: includes SMS permission for sideloaded APK
+        create("full") {
+            dimension = "distribution"
+        }
+    }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")

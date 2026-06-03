@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- SEND_SMS is only included in the full (sideloaded) build.
+         The Play Store flavor omits it to comply with Google Play policy,
+         which forbids SMS permissions for location-tracking apps. -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+</manifest>

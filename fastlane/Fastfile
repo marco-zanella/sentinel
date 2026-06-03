@@ -1,10 +1,12 @@
 default_platform(:android)
 
 platform :android do
-  desc "Build and sign release AAB and APK"
+  desc "Build Play Store AAB (no SMS) and full sideload APK (with SMS)"
   lane :build do
     project_root = File.expand_path('..', __dir__)
-    sh "cd '#{project_root}' && flutter build appbundle --release"
-    sh "cd '#{project_root}' && flutter build apk --release"
+    # Play Store: AAB without SMS permission
+    sh "cd '#{project_root}' && flutter build appbundle --flavor play --dart-define=SMS_ENABLED=false --release"
+    # Full sideload: APK with SMS permission
+    sh "cd '#{project_root}' && flutter build apk --flavor full --dart-define=SMS_ENABLED=true --release"
   end
 end

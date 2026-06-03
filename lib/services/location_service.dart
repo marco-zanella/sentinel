@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
@@ -17,11 +18,16 @@ class LocationService {
       );
     }
 
+    // geolocator's timeLimit is unreliable on Android — wrap with a Dart
+    // timeout so the button never spins forever if GPS can't get a fix.
     return Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         timeLimit: Duration(seconds: 30),
       ),
+    ).timeout(
+      const Duration(seconds: 35),
+      onTimeout: () => throw TimeoutException('Could not get a GPS fix within 30 s'),
     );
   }
 

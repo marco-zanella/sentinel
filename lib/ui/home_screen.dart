@@ -35,6 +35,16 @@ class _HomeScreenState extends State<HomeScreen> {
         await FlutterForegroundTask.requestNotificationPermission();
         await FlutterForegroundTask.requestIgnoreBatteryOptimization();
 
+        // Google Play policy requires a prominent in-app disclosure before
+        // requesting ACCESS_BACKGROUND_LOCATION. Show it only when the
+        // permission has not been granted yet.
+        final bool bgAlreadyGranted =
+            await PermissionService.isBackgroundLocationGranted;
+        if (!bgAlreadyGranted) {
+          final bool confirmed = await _showBackgroundLocationDisclosure();
+          if (!confirmed) return;
+        }
+
         final List<String> denied =
             await PermissionService.requestForTracking();
         if (denied.isNotEmpty) {
@@ -55,6 +65,42 @@ class _HomeScreenState extends State<HomeScreen> {
     } finally {
       if (mounted) setState(() => _isTogglingService = false);
     }
+  }
+
+  /// Shows the mandatory prominent disclosure required by Google Play before
+  /// requesting background location. Returns true if the user confirmed.
+  Future<bool> _showBackgroundLocationDisclosure() async {
+    if (!mounted) return false;
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext ctx) => AlertDialog(
+        title: const Text('Background location access'),
+        content: const SingleChildScrollView(
+          child: Text(
+            'Sentinel collects your device\'s precise GPS location '
+            'continuously in the background, including when the app is '
+            'closed or not in use.\n\n'
+            'This location data is sent directly from your device to your '
+            'configured recipients (via Telegram or SMS). It is never '
+            'stored on external servers or shared with third parties.\n\n'
+            'To enable tracking, you will be asked to grant '
+            '"Allow all the time" location access in the next screen.',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+    return confirmed == true;
   }
 
   Future<void> _sendNow() async {

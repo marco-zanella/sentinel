@@ -10,7 +10,7 @@ An Android background location tracking app. Sentinel runs as a foreground servi
 ## Features
 
 - **Background tracking** — stays alive with a foreground service; survives screen off and app switching
-- **SMS delivery** — sends location via SMS directly from the device
+- **SMS delivery** — sends location via SMS directly from the device (full build only; see [Builds](#builds))
 - **Telegram delivery** — posts to any Telegram chat, group, or channel via a bot
 - **Priority groups** — recipients are organised in groups; if one group fails, the next is tried
 - **Delivery policy** — each group uses either *any* (succeed if at least one recipient works) or *all* (succeed only if every recipient works)
@@ -34,16 +34,29 @@ The location message includes coordinates, accuracy, and a Google Maps link.
 
 ---
 
+## Builds
+
+Sentinel is distributed in two variants due to [Google Play policy](https://support.google.com/googleplay/android-developer/answer/9047303), which forbids `SEND_SMS` for location-tracking apps:
+
+| Variant | Delivery methods | Where to get it |
+|---|---|---|
+| **Play Store** (`play` flavor) | Telegram only | Google Play |
+| **Full** (`full` flavor) | Telegram + SMS | [GitHub Releases](https://github.com/marco-zanella/sentinel/releases) (APK) |
+
+To install the full APK, enable **"Install from unknown sources"** in your Android settings, download the APK from the latest GitHub Actions run or release, and open it.
+
+---
+
 ## Permissions
 
-| Permission | Reason |
-|---|---|
-| `ACCESS_FINE_LOCATION` | Read precise GPS coordinates |
-| `ACCESS_BACKGROUND_LOCATION` | Continue reading GPS while the app is in the background |
-| `SEND_SMS` | Deliver location via SMS |
-| `INTERNET` | Deliver location via Telegram |
-| `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_LOCATION` | Keep the tracking service alive |
-| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Ask the user to exempt Sentinel from battery saver, which would otherwise kill the service |
+| Permission | Build | Reason |
+|---|---|---|
+| `ACCESS_FINE_LOCATION` | both | Read precise GPS coordinates |
+| `ACCESS_BACKGROUND_LOCATION` | both | Continue reading GPS while the app is in the background |
+| `INTERNET` | both | Deliver location via Telegram |
+| `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_LOCATION` | both | Keep the tracking service alive |
+| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | both | Ask the user to exempt Sentinel from battery saver, which would otherwise kill the service |
+| `SEND_SMS` | full only | Deliver location via SMS |
 
 Background location requires a separate grant: after allowing location, Android will prompt you to choose **"Allow all the time"** in the system settings.
 
@@ -91,24 +104,35 @@ keyAlias=<your key alias>
 storeFile=<absolute path to your .jks file>
 ```
 
-Then:
+Then build the desired variant:
 
 ```bash
-flutter build appbundle --release
+# Play Store AAB (no SMS)
+flutter build appbundle --flavor play --dart-define=SMS_ENABLED=false --release
+
+# Full sideload APK (with SMS)
+flutter build apk --flavor full --dart-define=SMS_ENABLED=true --release
 ```
 
 ---
 
 ## CI/CD
 
-GitHub Actions builds and signs a release `.aab` on every push of a `v*` tag:
+GitHub Actions builds and signs both variants on every push of a `v*` tag:
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-The signed bundle is uploaded as a workflow artifact. The first upload to Google Play must be done manually; subsequent releases can be promoted directly.
+Two artifacts are produced:
+
+| Artifact | File | Purpose |
+|---|---|---|
+| `sentinel-play-aab` | `app-play-release.aab` | Upload to Google Play Console |
+| `sentinel-full-apk` | `app-full-release.apk` | Distribute directly for SMS support |
+
+The first upload to Google Play must be done manually; subsequent releases can be promoted directly.
 
 Required repository secrets:
 

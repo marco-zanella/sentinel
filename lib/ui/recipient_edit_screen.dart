@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../flavors.dart';
 import '../models/recipient.dart';
 import '../recipients/sms_recipient.dart';
 import '../recipients/telegram_recipient.dart';
@@ -39,7 +40,7 @@ class _RecipientEditScreenState extends State<RecipientEditScreen> {
       _botTokenController = TextEditingController(text: r.botToken);
       _chatIdController = TextEditingController(text: r.chatId);
     } else {
-      _type = _RecipientType.sms;
+      _type = kSmsEnabled ? _RecipientType.sms : _RecipientType.telegram;
       _labelController = TextEditingController();
       _phoneController = TextEditingController();
       _botTokenController = TextEditingController();
@@ -95,7 +96,7 @@ class _RecipientEditScreenState extends State<RecipientEditScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          if (!isEditing) ...[
+          if (!isEditing && kSmsEnabled) ...[
             SegmentedButton<_RecipientType>(
               segments: const [
                 ButtonSegment<_RecipientType>(
