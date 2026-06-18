@@ -33,8 +33,11 @@
             </intent-filter>
         </activity>
         <!-- Required by flutter_foreground_task. Name must not change. -->
+        <!-- foregroundServiceType is mandatory on Android 14+ (API 34); omitting it causes
+             startForeground() to be rejected and Android throws ServiceTimeoutException. -->
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+            android:foregroundServiceType="location"
             android:exported="false" />
 
         <meta-data
